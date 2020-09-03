@@ -50,22 +50,33 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     idInterval = setInterval(updateClock, 1000);
   };
-  countTimer("03 September 2020");
+  countTimer("05 September 2020");
 
   // Меню
   const toggleMenu = () => {
     const btnMenu = document.querySelector(".menu"),
-      menu = document.querySelector("menu"),
-      closeBtn = document.querySelector(".close-btn"),
-      menuItems = menu.querySelectorAll("ul>li");
+      menu = document.querySelector("menu");
+    // closeBtn = document.querySelector(".close-btn"),
+    // menuItems = menu.querySelectorAll("ul>li");
 
     const handlerMenu = () => {
-      menu.classList.toggle("active-menu");
-    };
-    btnMenu.addEventListener("click", handlerMenu);
-    closeBtn.addEventListener("click", handlerMenu);
+      const target = event.target;
 
-    menuItems.forEach((elem) => elem.addEventListener("click", handlerMenu));
+      console.log("target: ", target);
+
+      if (target.closest(".menu")) {
+        menu.classList.toggle("active-menu");
+      } else if (target !== menu && target.closest('[href^="#"]')) {
+        console.log(target.closest('[href^="#"]'));
+
+        menu.classList.toggle("active-menu");
+      }
+    };
+
+    btnMenu.addEventListener("click", handlerMenu);
+    // closeBtn.addEventListener('click', handlerMenu);
+    // menuItem.forEach(elem => elem.addEventListener('click', handlerMenu));
+    menu.addEventListener("click", handlerMenu);
   };
 
   toggleMenu();
@@ -74,11 +85,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const togglePopUp = () => {
     const popup = document.querySelector(".popup"),
       popupBtn = document.querySelectorAll(".popup-btn"),
-      popupClose = document.querySelector(".popup-close"),
+      // popupClose = document.querySelector('.popup-close'),
       popupContent = document.querySelector(".popup-content"),
       popupData = {
         count: -445,
-        speed: 3,
+        speed: 10,
         startPos: -445,
         endPos: 0,
       };
@@ -111,10 +122,57 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    popupClose.addEventListener("click", () => {
-      popup.style.display = "none";
+    popup.addEventListener("click", (event) => {
+      let target = event.target;
+
+      if (target.classList.contains("popup-close")) {
+        popup.style.display = "none";
+      } else {
+        target = target.closest(".popup-content");
+
+        if (!target) {
+          popup.style.display = "none";
+        }
+      }
     });
   };
 
   togglePopUp();
+
+  // tabs
+
+  const tabs = () => {
+    const tabHeader = document.querySelector(".service-header"),
+      tab = tabHeader.querySelectorAll(".service-header-tab"),
+      tabContent = document.querySelectorAll(".service-tab");
+
+    const toggleTabContent = (index) => {
+      for (let i = 0; i < tabContent.length; i++) {
+        if (index === i) {
+          tab[i].classList.add("active");
+
+          tabContent[i].classList.remove("d-none");
+        } else {
+          tab[i].classList.remove("active");
+          tabContent[i].classList.add("d-none");
+        }
+      }
+    };
+
+    tabHeader.addEventListener("click", (event) => {
+      let target = event.target;
+
+      target = target.closest(".service-header-tab");
+
+      if (target) {
+        tab.forEach((item, i) => {
+          if (item === target) {
+            toggleTabContent(i);
+          }
+        });
+      }
+    });
+  };
+
+  tabs();
 });
