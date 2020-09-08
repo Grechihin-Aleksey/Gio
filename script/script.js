@@ -95,16 +95,16 @@ window.addEventListener("DOMContentLoaded", () => {
       };
 
     const showPopup = () => {
-      popupData.startPos > popupData.endPos
-        ? (popupData.count -= popupData.speed)
-        : (popupData.count += popupData.speed);
+      popupData.startPos > popupData.endPos ?
+        (popupData.count -= popupData.speed) :
+        (popupData.count += popupData.speed);
 
       popupContent.style.transform = `translateY(${popupData.count}px)`;
 
       if (
-        popupData.startPos > popupData.endPos
-          ? popupData.count > popupData.endPos
-          : popupData.count < popupData.endPos
+        popupData.startPos > popupData.endPos ?
+        popupData.count > popupData.endPos :
+        popupData.count < popupData.endPos
       ) {
         requestAnimationFrame(showPopup);
       }
@@ -277,6 +277,40 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     portfolioDots.children[0].classList.add("dot-active");
   };
+
+
+
+  const setCommandImg = () => {
+    const command = document.querySelector('#command .row');
+
+    const changingPhotos = () => {
+      const target = event.target;
+
+      if (target.classList.contains('command__photo')) {
+        const lastSrc = target.src;
+
+        target.src = target.dataset.img;
+        target.dataset.img = lastSrc;
+      }
+    };
+
+    command.addEventListener('mouseover', changingPhotos);
+    command.addEventListener('mouseout', changingPhotos);
+  };
+
+
+  const checkCalcBlock = () => {
+    const calcBlock = document.querySelector('.calc-block');
+
+    calcBlock.addEventListener('input', () => {
+      if (event.target.type === 'number') {
+        event.target.value = event.target.value.replace(/\D/g, '');
+      }
+    });
+  };
+
+  checkCalcBlock();
+  setCommandImg();
   addDot();
   slider();
 });
