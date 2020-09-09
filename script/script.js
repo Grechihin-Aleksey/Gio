@@ -50,7 +50,7 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     idInterval = setInterval(updateClock, 1000);
   };
-  countTimer("05 September 2020");
+  countTimer("15 September 2020");
 
   // Меню
   const toggleMenu = () => {
@@ -95,16 +95,16 @@ window.addEventListener("DOMContentLoaded", () => {
       };
 
     const showPopup = () => {
-      popupData.startPos > popupData.endPos ?
-        (popupData.count -= popupData.speed) :
-        (popupData.count += popupData.speed);
+      popupData.startPos > popupData.endPos
+        ? (popupData.count -= popupData.speed)
+        : (popupData.count += popupData.speed);
 
       popupContent.style.transform = `translateY(${popupData.count}px)`;
 
       if (
-        popupData.startPos > popupData.endPos ?
-        popupData.count > popupData.endPos :
-        popupData.count < popupData.endPos
+        popupData.startPos > popupData.endPos
+          ? popupData.count > popupData.endPos
+          : popupData.count < popupData.endPos
       ) {
         requestAnimationFrame(showPopup);
       }
@@ -278,15 +278,13 @@ window.addEventListener("DOMContentLoaded", () => {
     portfolioDots.children[0].classList.add("dot-active");
   };
 
-
-
   const setCommandImg = () => {
-    const command = document.querySelector('#command .row');
+    const command = document.querySelector("#command .row");
 
     const changingPhotos = () => {
       const target = event.target;
 
-      if (target.classList.contains('command__photo')) {
+      if (target.classList.contains("command__photo")) {
         const lastSrc = target.src;
 
         target.src = target.dataset.img;
@@ -294,21 +292,77 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    command.addEventListener('mouseover', changingPhotos);
-    command.addEventListener('mouseout', changingPhotos);
+    command.addEventListener("mouseover", changingPhotos);
+    command.addEventListener("mouseout", changingPhotos);
   };
 
-
   const checkCalcBlock = () => {
-    const calcBlock = document.querySelector('.calc-block');
+    const calcBlock = document.querySelector(".calc-block");
 
-    calcBlock.addEventListener('input', () => {
-      if (event.target.type === 'number') {
-        event.target.value = event.target.value.replace(/\D/g, '');
+    calcBlock.addEventListener("input", () => {
+      if (event.target.type === "number") {
+        event.target.value = event.target.value.replace(/\D/g, "");
       }
     });
   };
 
+  // Калькулятор
+  const calc = (price = 100) => {
+    const calcBlock = document.querySelector(".calc-block"),
+      calcType = document.querySelector(".calc-type"),
+      calcSquare = document.querySelector(".calc-square"),
+      calcCount = document.querySelector(".calc-count"),
+      calcDay = document.querySelector(".calc-day"),
+      totalValue = document.getElementById("total");
+
+    const countSam = () => {
+      let total = 0,
+        countValue = 1,
+        dayValue = 1;
+      const typeValue = calcType.options[calcType.selectedIndex].value,
+        squareValue = +calcSquare.value;
+
+      if (calcCount.value > 1) {
+        countValue += (calcCount.value - 1) / 10;
+      }
+
+      if (calcDay && calcDay.value < 5) {
+        dayValue *= 2;
+      } else if (calcDay && calcDay.value < 10) {
+        dayValue *= 1.5;
+      }
+
+      if (typeValue && squareValue) {
+        total = price * typeValue * squareValue * countValue * dayValue;
+      }
+      totalValue.textContent = total;
+    };
+
+    calcBlock.addEventListener("change", (event) => {
+      const target = event.target;
+      // if (
+      //   target.matches(".calc-type") ||
+      //   target.matches(".calc-square") ||
+      //   target.matches(".calc-count") ||
+      //   target.matches(".calc-day")
+      // ) {
+      //   console.log(1);
+      // }
+      // if (
+      //   target === calcType ||
+      //   target === calcSquare ||
+      //   target === calcCount ||
+      //   target === calcDay
+      // ) {
+      //   console.log(1);
+      // }
+
+      if (target.matches("select") || target.matches("input")) {
+        countSam();
+      }
+    });
+  };
+  calc(100);
   checkCalcBlock();
   setCommandImg();
   addDot();
